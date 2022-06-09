@@ -1,29 +1,22 @@
-import { Skeleton, Typography } from "antd";
+import { Button, Box, Flex, Text, Spinner, useClipboard, toast, useToast } from "@chakra-ui/react";
 import React from "react";
-import { useThemeSwitcher } from "react-css-theme-switcher";
 import Blockies from "react-blockies";
 import { useLookupAddress } from "eth-hooks/dapps/ens";
+import { CopyIcon } from "@chakra-ui/icons";
 
 // changed value={address} to address={address}
 
-const { Text } = Typography;
-
-/** 
+/**
   ~ What it does? ~
-
   Displays an address with a blockie image and option to copy address
-
   ~ How can I use? ~
-
   <Address
     address={address}
     ensProvider={mainnetProvider}
     blockExplorer={blockExplorer}
     fontSize={fontSize}
   />
-
   ~ Features ~
-
   - Provide ensProvider={mainnetProvider} and your address will be replaced by ENS name
               (ex. "0xa870" => "user.eth")
   - Provide blockExplorer={blockExplorer}, click on address and get the link
@@ -34,13 +27,14 @@ const { Text } = Typography;
 const blockExplorerLink = (address, blockExplorer) => `${blockExplorer || "https://etherscan.io/"}address/${address}`;
 
 export default function Address(props) {
-  const { currentTheme } = useThemeSwitcher();
   const address = props.value || props.address;
   const ens = useLookupAddress(props.ensProvider, address);
   const ensSplit = ens && ens.split(".");
   const validEnsCheck = ensSplit && ensSplit[ensSplit.length - 1] === "eth";
   const etherscanLink = blockExplorerLink(address, props.blockExplorer);
   let displayAddress = address?.substr(0, 5) + "..." + address?.substr(-4);
+  const { hasCopied, onCopy } = useClipboard(address);
+  const toast = useToast();
 
   if (validEnsCheck) {
     displayAddress = ens;
@@ -51,58 +45,53 @@ export default function Address(props) {
   }
 
   if (!address) {
-    return (
-      <span>
-        <Skeleton avatar paragraph={{ rows: 1 }} />
-      </span>
-    );
+    return <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="purple.500" size="xl" />;
   }
 
   if (props.minimized) {
     return (
       <span style={{ verticalAlign: "middle" }}>
-        <a
-          style={{ color: currentTheme === "light" ? "#222222" : "#ddd" }}
-          target="_blank"
-          href={etherscanLink}
-          rel="noopener noreferrer"
-        >
-          <Blockies seed={address.toLowerCase()} size={8} scale={2} />
+        <a style={{ color: "#ffff" }} target="_blank" href={etherscanLink} rel="noopener noreferrer">
+          <span style={{ overflow: "hidden", borderRadius: "50%" }}>
+            <Blockies seed={address.toLowerCase()} size={props.blockieSize ? props.blockieSize : 8} scale={2} />
+          </span>
         </a>
       </span>
     );
   }
 
   return (
-    <span>
-      <span style={{ verticalAlign: "middle" }}>
-        <Blockies seed={address.toLowerCase()} size={8} scale={props.fontSize ? props.fontSize / 7 : 4} />
-      </span>
-      <span style={{ verticalAlign: "middle", paddingLeft: 5, fontSize: props.fontSize ? props.fontSize : 28 }}>
-        {props.onChange ? (
-          <Text editable={{ onChange: props.onChange }} copyable={{ text: address }}>
-            <a
-              style={{ color: currentTheme === "light" ? "#222222" : "#ddd" }}
-              target="_blank"
-              href={etherscanLink}
-              rel="noopener noreferrer"
-            >
-              {displayAddress}
-            </a>
-          </Text>
-        ) : (
-          <Text copyable={{ text: address }}>
-            <a
-              style={{ color: currentTheme === "light" ? "#222222" : "#ddd" }}
-              target="_blank"
-              href={etherscanLink}
-              rel="noopener noreferrer"
-            >
-              {displayAddress}
-            </a>
-          </Text>
-        )}
-      </span>
-    </span>
+    <>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <span style={{ overflow: "hidden", borderRadius: "50%" }}>
+          <Blockies
+            seed={address.toLowerCase()}
+            size={props.blockieSize ? props.blockieSize : 8}
+            scale={props.fontSize ? props.fontSize / 7 : 4}
+          />
+        </span>
+        <span style={{ paddingLeft: 5, fontSize: props.fontSize ? props.fontSize : 28 }}>
+          {props.onChange ? (
+            <Flex align={"center"}>
+              <Text editable={{ onChange: props.onChange }} copyable={{ text: address }}>
+                <a style={{ color: "#ffff" }} target="_blank" href={etherscanLink} rel="noopener noreferrer">
+                  {displayAddress}
+                </a>
+              </Text>
+              <CopyIcon size={59} color="white" onClick={onCopy} />
+            </Flex>
+          ) : (
+            <Flex align={"center"}>
+              <Text>
+                <a style={{ color: "#fff" }} target="_blank" href={etherscanLink} rel="noopener noreferrer">
+                  {displayAddress}
+                </a>
+              </Text>
+              <CopyIcon mx={2} size={59} color="white" _hover={{ color: "purple" }} onClick={onCopy} />
+            </Flex>
+          )}
+        </span>
+      </div>
+    </>
   );
 }

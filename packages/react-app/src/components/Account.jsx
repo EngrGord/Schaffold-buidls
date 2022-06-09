@@ -1,20 +1,16 @@
-import { Button } from "antd";
+import { Button, Flex } from "@chakra-ui/react";
 import React from "react";
-import { useThemeSwitcher } from "react-css-theme-switcher";
 
 import Address from "./Address";
 import Balance from "./Balance";
-import Wallet from "./Wallet";
 
-/** 
+/**
   ~ What it does? ~
-
   Displays an Address, Balance, and Wallet as one Account component,
   also allows users to log in to existing accounts and log out
-
   ~ How can I use? ~
-
   <Account
+    useBurner={boolean}
     address={address}
     localProvider={localProvider}
     userProvider={userProvider}
@@ -26,9 +22,7 @@ import Wallet from "./Wallet";
     blockExplorer={blockExplorer}
     isContract={boolean}
   />
-
   ~ Features ~
-
   - Provide address={address} and get balance corresponding to the given address
   - Provide localProvider={localProvider} to access balance on local network
   - Provide userProvider={userProvider} to display a wallet
@@ -42,6 +36,7 @@ import Wallet from "./Wallet";
 **/
 
 export default function Account({
+  useBurner,
   address,
   userSigner,
   localProvider,
@@ -54,53 +49,40 @@ export default function Account({
   blockExplorer,
   isContract,
 }) {
-  const { currentTheme } = useThemeSwitcher();
-
-  let accountButtonInfo;
+  let accountButton;
   if (web3Modal?.cachedProvider) {
-    accountButtonInfo = { name: 'Logout', action: logoutOfWeb3Modal };
+    accountButton = { name: "Logout", action: logoutOfWeb3Modal };
   } else {
-    accountButtonInfo = { name: 'Connect', action: loadWeb3Modal };
+    accountButton = { name: "Connect", action: loadWeb3Modal };
   }
 
-  const display = !minimized && (
-    <span>
-      {address && (
-        <Address
-          address={address}
-          ensProvider={mainnetProvider}
-          blockExplorer={blockExplorer}
-          fontSize={20}
-        />
-      )}
-      <Balance address={address} provider={localProvider} price={price} size={20} />
-      {!isContract && (
-        <Wallet
-          address={address}
-          provider={localProvider}
-          signer={userSigner}
-          ensProvider={mainnetProvider}
-          price={price}
-          color={currentTheme === "light" ? "#1890ff" : "#2caad9"}
-          size={22}
-          padding={"0px"}
-        />
-      )}
-    </span>
-  );
-
   return (
-    <div style={{ display: "flex" }}>
-      {display}
-      {web3Modal && (
-        <Button
-          style={{ marginLeft: 8 }}
-          shape="round"
-          onClick={accountButtonInfo.action}
-        >
-          {accountButtonInfo.name}
-        </Button>
-      )}
-    </div>
+    <>
+      <div
+        style={{
+          border: "1px solid transparent",
+          borderRadius: "9999px",
+          backgroundColor: "#262626",
+          padding: "0.375rem 0.875rem",
+        }}
+      >
+        <Flex align={"center"} border={1} color={"white"} spacing={3}>
+          <Balance address={address} provider={localProvider} price={price} size={"1.125rem"} />
+
+          {address && (
+            <Address
+              address={address}
+              ensProvider={mainnetProvider}
+              blockExplorer={blockExplorer}
+              blockieSize={8}
+              fontSize={16}
+            />
+          )}
+        </Flex>
+      </div>
+      <Button m={3} color="white" colorScheme="white.500" size={"md"} variant="outline" onClick={accountButton.action}>
+        {accountButton.name}
+      </Button>
+    </>
   );
 }
