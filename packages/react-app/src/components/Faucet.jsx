@@ -1,7 +1,7 @@
-import { Button, Input, Tooltip } from "antd";
+import { Button, Input, InputGroup, InputLeftElement, InputRightElement, Tooltip } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import Blockies from "react-blockies";
-import { SendOutlined } from "@ant-design/icons";
+import { AiOutlineSend } from "react-icons/ai";
 import { Transactor } from "../helpers";
 import Wallet from "./Wallet";
 
@@ -68,35 +68,38 @@ export default function Faucet(props) {
 
   return (
     <span>
-      <Input
-        size="large"
-        placeholder={placeholder ? placeholder : "local faucet"}
-        prefix={blockie}
-        value={address}
-        onChange={e => updateAddress(e.target.value)}
-        suffix={
-          <Tooltip title="Faucet: Send local ether to an address.">
-            <Button
-              onClick={() => {
-                tx({
-                  to: address,
-                  value: utils.parseEther("0.01"),
-                });
-                setAddress("");
-              }}
-              shape="circle"
-              icon={<SendOutlined />}
-            />
-            <Wallet
-              color="#888888"
-              provider={localProvider}
-              ensProvider={ensProvider}
-              price={price}
-              address={faucetAddress}
-            />
-          </Tooltip>
-        }
-      />
+      <InputGroup>
+        <InputLeftElement pointerEvents="none" color="gray.300" fontSize="1.2em" children={blockie} />
+        <Input
+          onChange={e => updateAddress(e.target.value)}
+          value={address}
+          placeholder={placeholder ? placeholder : "local faucet"}
+        />
+        <InputRightElement
+          children={
+            <Tooltip title="Faucet: Send local ether to an address.">
+              <Button
+                onClick={() => {
+                  tx({
+                    to: address,
+                    value: utils.parseEther("0.01"),
+                  });
+                  setAddress("");
+                }}
+                shape="circle"
+                icon={<AiOutlineSend />}
+              />
+              <Wallet
+                color="#888888"
+                provider={localProvider}
+                ensProvider={ensProvider}
+                price={price}
+                address={faucetAddress}
+              />
+            </Tooltip>
+          }
+        />
+      </InputGroup>
     </span>
   );
 }

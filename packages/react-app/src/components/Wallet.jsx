@@ -1,7 +1,22 @@
-import { Button, Modal, Spin, Tooltip, Typography } from "antd";
+import {
+  Button,
+  Modal,
+  Spinner,
+  Tooltip,
+  Text,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import { KeyOutlined, QrcodeOutlined, SendOutlined, WalletOutlined } from "@ant-design/icons";
+import { MdOutlineVpnKey, MdOutlineQrCodeScanner } from "react-icons/md";
+import { BiSend } from "react-icons/bi";
+import { RiWallet3Fill } from "react-icons/ri";
 import QR from "qrcode.react";
 
 import { Transactor } from "../helpers";
@@ -9,8 +24,6 @@ import Address from "./Address";
 import AddressInput from "./AddressInput";
 import Balance from "./Balance";
 import EtherInput from "./EtherInput";
-
-const { Text, Paragraph } = Typography;
 
 /**
   ~ What it does? ~
@@ -59,10 +72,11 @@ export default function Wallet(props) {
   const [amount, setAmount] = useState();
   const [toAddress, setToAddress] = useState();
   const [pk, setPK] = useState();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const providerSend = props.provider ? (
     <Tooltip title="Wallet">
-      <WalletOutlined
+      <RiWallet3Fill
         onClick={() => {
           setOpen(!open);
         }}
@@ -106,7 +120,7 @@ export default function Wallet(props) {
           setQr("");
         }}
       >
-        <QrcodeOutlined /> Hide
+        <MdOutlineQrCodeScanner /> Hide
       </Button>
     );
     privateKeyButton = (
@@ -117,7 +131,7 @@ export default function Wallet(props) {
           setQr("");
         }}
       >
-        <KeyOutlined /> Private Key
+        <MdOutlineVpnKey /> Private Key
       </Button>
     );
   } else if (pk) {
@@ -186,9 +200,9 @@ export default function Wallet(props) {
             imageSettings={{ excavate: false }}
           />
 
-          <Paragraph style={{ fontSize: "16" }} copyable>
+          <Text style={{ fontSize: "16" }} copyable>
             {"https://xdai.io/" + pk}
-          </Paragraph>
+          </Text>
 
           {extraPkDisplay ? (
             <div>
@@ -224,7 +238,7 @@ export default function Wallet(props) {
           setPK("");
         }}
       >
-        <QrcodeOutlined /> Receive
+        <MdOutlineQrCodeScanner /> Receive
       </Button>
     );
     privateKeyButton = (
@@ -235,7 +249,7 @@ export default function Wallet(props) {
           setQr("");
         }}
       >
-        <KeyOutlined /> Hide
+        <MdOutlineVpnKey /> Hide
       </Button>
     );
   } else {
@@ -273,7 +287,7 @@ export default function Wallet(props) {
           setPK("");
         }}
       >
-        <QrcodeOutlined /> Receive
+        <MdOutlineQrCodeScanner /> Receive
       </Button>
     );
     privateKeyButton = (
@@ -284,7 +298,7 @@ export default function Wallet(props) {
           setQr("");
         }}
       >
-        <KeyOutlined /> Private Key
+        <MdOutlineVpnKey /> Private Key
       </Button>
     );
   }
@@ -292,11 +306,64 @@ export default function Wallet(props) {
   return (
     <span>
       {providerSend}
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            {" "}
+            <div>
+              {selectedAddress ? <Address address={selectedAddress} ensProvider={props.ensProvider} /> : <Spinner />}
+              <div style={{ float: "right", paddingRight: 25 }}>
+                <Balance address={selectedAddress} provider={props.provider} dollarMultiplier={props.price} />
+              </div>
+            </div>
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+          {display}
+          </ModalBody>
+
+          <ModalFooter>
+            {[
+              privateKeyButton,
+              receiveButton,
+              <Button
+                key="submit"
+                type="primary"
+                disabled={!amount || !toAddress || qr}
+                loading={false}
+                onClick={() => {
+                  const tx = Transactor(props.signer || props.provider);
+
+                  let value;
+                  try {
+                    value = ethers.utils.parseEther("" + amount);
+                  } catch (e) {
+                    // failed to parseEther, try something else
+                    value = ethers.utils.parseEther("" + parseFloat(amount).toFixed(8));
+                  }
+
+                  tx({
+                    to: toAddress,
+                    value,
+                  });
+                  setOpen(!open);
+                  setQr();
+                }}
+              >
+                <BiSend /> Send
+              </Button>,
+            ]}
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       <Modal
         visible={open}
         title={
           <div>
-            {selectedAddress ? <Address address={selectedAddress} ensProvider={props.ensProvider} /> : <Spin />}
+            {selectedAddress ? <Address address={selectedAddress} ensProvider={props.ensProvider} /> : <Spinner />}
             <div style={{ float: "right", paddingRight: 25 }}>
               <Balance address={selectedAddress} provider={props.provider} dollarMultiplier={props.price} />
             </div>
@@ -339,7 +406,7 @@ export default function Wallet(props) {
               setQr();
             }}
           >
-            <SendOutlined /> Send
+            <BiSend /> Send
           </Button>,
         ]}
       >

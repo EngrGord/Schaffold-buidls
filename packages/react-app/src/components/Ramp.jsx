@@ -1,6 +1,17 @@
-import { Button, Divider, Modal } from "antd";
+import {
+  Button,
+  Divider,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
 import React, { useState } from "react";
-import { DollarCircleOutlined } from "@ant-design/icons";
+import { CgDollar } from "react-icons/cg";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
 
 // added display of 0 if price={price} is not provided
@@ -27,7 +38,7 @@ import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
 
 export default function Ramp(props) {
   const [modalUp, setModalUp] = useState("down");
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const type = "default";
 
   const allFaucets = [];
@@ -53,6 +64,95 @@ export default function Ramp(props) {
 
   return (
     <div>
+      <Button onClick={onOpen}>
+        <CgDollar style={{ color: "#52c41a" }} /> {typeof props.price === "undefined" ? 0 : props.price.toFixed(2)}
+      </Button>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Buy ETH</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <p>
+              <Button
+                type={type}
+                size="large"
+                shape="round"
+                onClick={() => {
+                  window.open(
+                    "https://pay.sendwyre.com/purchase?destCurrency=ETH&sourceAmount=25&dest=" + props.address,
+                  );
+                }}
+              >
+                <span style={{ paddingRight: 15 }} role="img">
+                  <span role="img" aria-label="flag-us">
+                    🇺🇸
+                  </span>
+                </span>
+                Wyre
+              </Button>
+            </p>
+            <p>
+              {" "}
+              <Button
+                type={type}
+                size="large"
+                shape="round"
+                onClick={() => {
+                  new RampInstantSDK({
+                    hostAppName: "scaffold-eth",
+                    hostLogoUrl: "https://scaffoldeth.io/scaffold-eth.png",
+                    swapAmount: "100000000000000000", // 0.1 ETH in wei  ?
+                    swapAsset: "ETH",
+                    userAddress: props.address,
+                  })
+                    .on("*", event => console.log(event))
+                    .show();
+                }}
+              >
+                <span style={{ paddingRight: 15 }} role="img">
+                  <span role="img" aria-label="flag-gb">
+                    🇬🇧
+                  </span>
+                </span>
+                Ramp
+              </Button>
+            </p>
+
+            <p>
+              <Button
+                type={type}
+                size="large"
+                shape="round"
+                onClick={() => {
+                  window.open("https://www.coinbase.com/buy-ethereum");
+                }}
+              >
+                <span style={{ paddingRight: 15 }} role="img" aria-label="bank">
+                  🏦
+                </span>
+                Coinbase
+              </Button>
+            </p>
+
+            <Divider />
+
+            <h2>Testnet ETH</h2>
+
+            {allFaucets}
+          </ModalBody>
+
+          <ModalFooter>
+            {[
+              <Button key="back" onClick={onClose}>
+                cancel
+              </Button>,
+            ]}
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       <Button
         size="large"
         shape="round"
@@ -60,8 +160,7 @@ export default function Ramp(props) {
           setModalUp("up");
         }}
       >
-        <DollarCircleOutlined style={{ color: "#52c41a" }} />{" "}
-        {typeof props.price === "undefined" ? 0 : props.price.toFixed(2)}
+        <CgDollar style={{ color: "#52c41a" }} /> {typeof props.price === "undefined" ? 0 : props.price.toFixed(2)}
       </Button>
       <Modal
         title="Buy ETH"
