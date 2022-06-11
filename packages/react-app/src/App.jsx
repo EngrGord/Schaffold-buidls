@@ -14,13 +14,13 @@ import "./App.css";
 import {
   Account,
   //Contract,
-  Faucet,
+  //Faucet,
   GasGauge,
   Header,
   Ramp,
   ThemeSwitch,
-  NetworkDisplay,
-  FaucetHint,
+  //NetworkDisplay,
+  //FaucetHint,
   //NetworkSwitch,
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constants";
@@ -279,9 +279,9 @@ function App(props) {
           </div>
         </div>
       </Header>
-      {yourLocalBalance.lte(ethers.BigNumber.from("0")) && (
+      {/* {yourLocalBalance.lte(ethers.BigNumber.from("0")) && (
         <FaucetHint localProvider={localProvider} targetNetwork={targetNetwork} address={address} />
-      )}
+      )} */}
       {/* <NetworkDisplay
         NETWORKCHECK={NETWORKCHECK}
         localChainId={localChainId}
@@ -414,11 +414,11 @@ function App(props) {
             </Button>
           </GridItem>
         </Grid>
-
+{/* 
         <HStack align="middle" gutter={[4, 4]}>
           <VStack span={24}>
             {
-              /*  if the local provider has a signer, let's show the faucet:  */
+             
               faucetAvailable ? (
                 <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider} />
               ) : (
@@ -426,7 +426,7 @@ function App(props) {
               )
             }
           </VStack>
-        </HStack>
+        </HStack> */}
       </div>
     </div>
   );
