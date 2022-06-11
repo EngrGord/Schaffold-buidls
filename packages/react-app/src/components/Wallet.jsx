@@ -307,7 +307,8 @@ export default function Wallet(props) {
     <span>
       {providerSend}
 
-      <Modal onOk={() => {
+      <Modal
+        onOk={() => {
           setQr();
           setPK();
           setOpen(!isOpen);
@@ -316,7 +317,10 @@ export default function Wallet(props) {
           setQr();
           setPK();
           setOpen(!isOpen);
-        }} isOpen={isOpen} onClose={onClose}>
+        }}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -364,8 +368,6 @@ export default function Wallet(props) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-
-    
     </span>
   );
 }

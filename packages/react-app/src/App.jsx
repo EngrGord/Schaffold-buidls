@@ -316,14 +316,14 @@ function App(props) {
           {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
           <Home yourLocalBalance={yourLocalBalance} readContracts={readContracts} />
         </Route>
-          {/*
+        {/*
         <Route exact path="/debug">
                 🎛 this scaffolding is full of commonly used components
                 this <Contract/> component will automatically parse your ABI
                 and give you a form to interact with it locally
             */}
 
-          {/* <Contract
+        {/* <Contract
             name="YourContract"
             price={price}
             signer={userSigner}
@@ -366,7 +366,7 @@ function App(props) {
             contractConfig={contractConfig}
             chainId={1}
           /> */}
-          {/*
+        {/*
             <Contract
               name="UNI"
               customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.UNI}

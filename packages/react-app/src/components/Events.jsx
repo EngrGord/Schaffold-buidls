@@ -26,8 +26,8 @@ export default function Events({ contracts, contractName, eventName, localProvid
   return (
     <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
       <h2>Events:</h2>
-      <List
-        {...events.map(item => {
+      <List>
+        {events.map(item => {
           return (
             <ListItem key={item.blockNumber + "_" + item.args.sender + "_" + item.args.purpose}>
               <Address address={item.args[0]} ensProvider={mainnetProvider} fontSize={16} />
@@ -35,7 +35,7 @@ export default function Events({ contracts, contractName, eventName, localProvid
             </ListItem>
           );
         })}
-      />
+      </List>
     </div>
   );
 }
