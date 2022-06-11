@@ -75,10 +75,10 @@ export default function Wallet(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const providerSend = props.provider ? (
-    <Tooltip title="Wallet">
+    <Tooltip label="Wallet">
       <RiWallet3Fill
         onClick={() => {
-          setOpen(!open);
+          setOpen(!isOpen);
         }}
         rotate={-90}
         style={{
@@ -307,7 +307,16 @@ export default function Wallet(props) {
     <span>
       {providerSend}
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal onOk={() => {
+          setQr();
+          setPK();
+          setOpen(!isOpen);
+        }}
+        onCancel={() => {
+          setQr();
+          setPK();
+          setOpen(!isOpen);
+        }} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -320,9 +329,7 @@ export default function Wallet(props) {
             </div>
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
-          {display}
-          </ModalBody>
+          <ModalBody>{display}</ModalBody>
 
           <ModalFooter>
             {[
@@ -330,7 +337,6 @@ export default function Wallet(props) {
               receiveButton,
               <Button
                 key="submit"
-                type="primary"
                 disabled={!amount || !toAddress || qr}
                 loading={false}
                 onClick={() => {
@@ -348,7 +354,7 @@ export default function Wallet(props) {
                     to: toAddress,
                     value,
                   });
-                  setOpen(!open);
+                  setOpen(!isOpen);
                   setQr();
                 }}
               >
@@ -359,59 +365,7 @@ export default function Wallet(props) {
         </ModalContent>
       </Modal>
 
-      <Modal
-        visible={open}
-        title={
-          <div>
-            {selectedAddress ? <Address address={selectedAddress} ensProvider={props.ensProvider} /> : <Spinner />}
-            <div style={{ float: "right", paddingRight: 25 }}>
-              <Balance address={selectedAddress} provider={props.provider} dollarMultiplier={props.price} />
-            </div>
-          </div>
-        }
-        onOk={() => {
-          setQr();
-          setPK();
-          setOpen(!open);
-        }}
-        onCancel={() => {
-          setQr();
-          setPK();
-          setOpen(!open);
-        }}
-        footer={[
-          privateKeyButton,
-          receiveButton,
-          <Button
-            key="submit"
-            type="primary"
-            disabled={!amount || !toAddress || qr}
-            loading={false}
-            onClick={() => {
-              const tx = Transactor(props.signer || props.provider);
-
-              let value;
-              try {
-                value = ethers.utils.parseEther("" + amount);
-              } catch (e) {
-                // failed to parseEther, try something else
-                value = ethers.utils.parseEther("" + parseFloat(amount).toFixed(8));
-              }
-
-              tx({
-                to: toAddress,
-                value,
-              });
-              setOpen(!open);
-              setQr();
-            }}
-          >
-            <BiSend /> Send
-          </Button>,
-        ]}
-      >
-        {display}
-      </Modal>
+    
     </span>
   );
 }

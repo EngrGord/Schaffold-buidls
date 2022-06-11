@@ -1,5 +1,4 @@
-import { Button, Col, Menu, Row } from "antd";
-import "antd/dist/antd.css";
+import { Button, Grid, GridItem, HStack, Menu, VStack } from "@chakra-ui/react";
 import {
   useBalance,
   useContractLoader,
@@ -14,7 +13,7 @@ import { Link, Route, Switch, useLocation } from "react-router-dom";
 import "./App.css";
 import {
   Account,
-  Contract,
+  //Contract,
   Faucet,
   GasGauge,
   Header,
@@ -22,14 +21,19 @@ import {
   ThemeSwitch,
   NetworkDisplay,
   FaucetHint,
-  NetworkSwitch,
+  //NetworkSwitch,
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constants";
 import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
-import { Home, ExampleUI, Hints, Subgraph } from "./views";
+import {
+  Home,
+  //ExampleUI,
+  //Hints,
+  //Subgraph
+} from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
 const { ethers } = require("ethers");
@@ -253,11 +257,11 @@ function App(props) {
           <div style={{ display: "flex", flex: 1 }}>
             {USE_NETWORK_SELECTOR && (
               <div style={{ marginRight: 20 }}>
-                <NetworkSwitch
+                {/* <NetworkSwitch
                   networkOptions={networkOptions}
                   selectedNetwork={selectedNetwork}
                   setSelectedNetwork={setSelectedNetwork}
-                />
+                /> */}
               </div>
             )}
             <Account
@@ -286,7 +290,7 @@ function App(props) {
         logoutOfWeb3Modal={logoutOfWeb3Modal}
         USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
       />
-      <Menu style={{ textAlign: "center", marginTop: 20 }} selectedKeys={[location.pathname]} mode="horizontal">
+      {/* <Menu style={{ textAlign: "center", marginTop: 20 }} selectedKeys={[location.pathname]} mode="horizontal">
         <Menu.Item key="/">
           <Link to="/">App Home</Link>
         </Menu.Item>
@@ -305,21 +309,21 @@ function App(props) {
         <Menu.Item key="/subgraph">
           <Link to="/subgraph">Subgraph</Link>
         </Menu.Item>
-      </Menu>
+      </Menu> */}
 
       <Switch>
         <Route exact path="/">
           {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
           <Home yourLocalBalance={yourLocalBalance} readContracts={readContracts} />
         </Route>
-        <Route exact path="/debug">
           {/*
+        <Route exact path="/debug">
                 🎛 this scaffolding is full of commonly used components
                 this <Contract/> component will automatically parse your ABI
                 and give you a form to interact with it locally
             */}
 
-          <Contract
+          {/* <Contract
             name="YourContract"
             price={price}
             signer={userSigner}
@@ -361,7 +365,7 @@ function App(props) {
             blockExplorer="https://etherscan.io/"
             contractConfig={contractConfig}
             chainId={1}
-          />
+          /> */}
           {/*
             <Contract
               name="UNI"
@@ -371,31 +375,31 @@ function App(props) {
               address={address}
               blockExplorer="https://etherscan.io/"
             />
-            */}
         </Route>
-        <Route path="/subgraph">
+            */}
+        {/* <Route path="/subgraph">
           <Subgraph
             subgraphUri={props.subgraphUri}
             tx={tx}
             writeContracts={writeContracts}
             mainnetProvider={mainnetProvider}
           />
-        </Route>
+        </Route> */}
       </Switch>
 
       <ThemeSwitch />
 
       {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
       <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>
-        <Row align="middle" gutter={[4, 4]}>
-          <Col span={8}>
+        <Grid align="middle" gap={4}>
+          <GridItem span={8}>
             <Ramp price={price} address={address} networks={NETWORKS} />
-          </Col>
+          </GridItem>
 
-          <Col span={8} style={{ textAlign: "center", opacity: 0.8 }}>
+          <GridItem span={8} style={{ textAlign: "center", opacity: 0.8 }}>
             <GasGauge gasPrice={gasPrice} />
-          </Col>
-          <Col span={8} style={{ textAlign: "center", opacity: 1 }}>
+          </GridItem>
+          <GridItem span={8} style={{ textAlign: "center", opacity: 1 }}>
             <Button
               onClick={() => {
                 window.open("https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA");
@@ -408,11 +412,11 @@ function App(props) {
               </span>
               Support
             </Button>
-          </Col>
-        </Row>
+          </GridItem>
+        </Grid>
 
-        <Row align="middle" gutter={[4, 4]}>
-          <Col span={24}>
+        <HStack align="middle" gutter={[4, 4]}>
+          <VStack span={24}>
             {
               /*  if the local provider has a signer, let's show the faucet:  */
               faucetAvailable ? (
@@ -421,8 +425,8 @@ function App(props) {
                 ""
               )
             }
-          </Col>
-        </Row>
+          </VStack>
+        </HStack>
       </div>
     </div>
   );

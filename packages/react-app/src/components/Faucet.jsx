@@ -77,7 +77,7 @@ export default function Faucet(props) {
         />
         <InputRightElement
           children={
-            <Tooltip title="Faucet: Send local ether to an address.">
+            <Tooltip label="Faucet: Send local ether to an address.">
               <Button
                 onClick={() => {
                   tx({

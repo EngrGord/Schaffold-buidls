@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Select } from "antd";
+import { Select } from "@chakra-ui/react";
 import { useState, useMemo, useEffect } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
@@ -45,7 +45,7 @@ export default function TokenSelect({ onChange, chainId = 1, nativeToken = {}, l
 
     // use search result to format children
     return searchResults.map(i => (
-      <Select.Option key={i.address} style={{ paddingTop: "5px", paddingBottom: "5px" }} value={i.address}>
+      <option key={i.address} style={{ paddingTop: "5px", paddingBottom: "5px" }} value={i.address}>
         <div style={{ display: "flex", alignItems: "center" }}>
           {i.logoURI && (
             <div style={{ marginRight: "5px" }}>
@@ -55,7 +55,7 @@ export default function TokenSelect({ onChange, chainId = 1, nativeToken = {}, l
           {i.name} - {i.symbol} {i.address?.substr(0, 5) + "..." + i.address?.substr(-4)}{" "}
           {i.unlisted && <span style={{ fontStyle: "italic", fontSize: "12px", marginLeft: "3px" }}> (unlisted) </span>}
         </div>
-      </Select.Option>
+      </option>
     ));
   }, [JSON.stringify(searchResults)]);
 

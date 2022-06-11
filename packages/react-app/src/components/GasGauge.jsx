@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "antd";
+import { Button } from "@chakra-ui/react";
 
 // added display of 0 instead of NaN if gas price is not provided
 
@@ -25,8 +25,8 @@ export default function GasGauge(props) {
       onClick={() => {
         window.open("https://ethgasstation.info/");
       }}
-      size="large"
-      shape="round"
+      size="lg"
+      rounded={"full"}
     >
       <span style={{ marginRight: 8 }}>
         <span role="img" aria-label="fuelpump">

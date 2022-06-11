@@ -1,6 +1,7 @@
-import { Switch } from "antd";
+import { Button } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useThemeSwitcher } from "react-css-theme-switcher";
+import { BsSun, BsMoonStarsFill } from "react-icons/bs";
 
 export default function ThemeSwitcher() {
   const theme = window.localStorage.getItem("theme");
@@ -18,8 +19,9 @@ export default function ThemeSwitcher() {
 
   return (
     <div className="main fade-in" style={{ position: "fixed", right: 8, bottom: 8 }}>
-      <span style={{ padding: 8 }}>{currentTheme === "light" ? "☀️" : "🌜"}</span>
-      <Switch checked={isDarkMode} onChange={toggleTheme} />
+      <Button aria-label="Toggle Color Mode" onClick={toggleTheme} _focus={{ boxShadow: "none" }} w="fit-content">
+        {currentTheme === "light" ? <BsMoonStarsFill /> : <BsSun />}
+      </Button>
     </div>
   );
 }

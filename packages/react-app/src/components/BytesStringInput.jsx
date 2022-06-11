@@ -1,4 +1,4 @@
-import { Input } from "antd";
+import { Input, InputGroup, InputRightAddon } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 const { utils, constants } = require("ethers");
@@ -79,29 +79,31 @@ export default function BytesStringInput(props) {
   }, [currentValue]);
 
   return (
-    <Input
-      placeholder={props.placeholder ? props.placeholder : "Enter value in " + mode}
-      autoFocus={props.autoFocus}
-      value={display}
-      addonAfter={addonAfter}
-      onChange={async e => {
-        const newValue = e.target.value;
-        if (mode === "STRING") {
-          // const ethValue = parseFloat(newValue) / props.price;
-          // setValue(ethValue);
-          if (typeof props.onChange === "function") {
-            props.onChange(utils.formatBytes32String(newValue));
+    <InputGroup>
+      <InputRightAddon children={addonAfter} />
+      <Input
+        placeholder={props.placeholder ? props.placeholder : "Enter value in " + mode}
+        autoFocus={props.autoFocus}
+        value={display}
+        onChange={async e => {
+          const newValue = e.target.value;
+          if (mode === "STRING") {
+            // const ethValue = parseFloat(newValue) / props.price;
+            // setValue(ethValue);
+            if (typeof props.onChange === "function") {
+              props.onChange(utils.formatBytes32String(newValue));
+            }
+            setValue(utils.formatBytes32String(newValue));
+            setDisplay(newValue);
+          } else {
+            if (typeof props.onChange === "function") {
+              props.onChange(newValue);
+            }
+            setValue(newValue);
+            setDisplay(newValue);
           }
-          setValue(utils.formatBytes32String(newValue));
-          setDisplay(newValue);
-        } else {
-          if (typeof props.onChange === "function") {
-            props.onChange(newValue);
-          }
-          setValue(newValue);
-          setDisplay(newValue);
-        }
-      }}
-    />
+        }}
+      />
+    </InputGroup>
   );
 }
