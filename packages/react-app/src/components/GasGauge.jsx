@@ -22,10 +22,12 @@ import { Button } from "@chakra-ui/react";
 export default function GasGauge(props) {
   return (
     <Button
+      variant="outline"
+      colorScheme={"white"}
       onClick={() => {
         window.open("https://ethgasstation.info/");
       }}
-      size="lg"
+      size="md"
       rounded={"full"}
     >
       <span style={{ marginRight: 8 }}>

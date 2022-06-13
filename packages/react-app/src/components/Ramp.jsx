@@ -47,6 +47,7 @@ export default function Ramp(props) {
       allFaucets.push(
         <p key={props.networks[n].chainId}>
           <Button
+            variant={"outline"}
             style={{ color: props.networks[n].color }}
             type={type}
             size="large"
@@ -64,7 +65,7 @@ export default function Ramp(props) {
 
   return (
     <div>
-      <Button onClick={onOpen}>
+      <Button variant={"outline"} onClick={onOpen}>
         <CgDollar style={{ color: "#52c41a" }} /> {typeof props.price === "undefined" ? 0 : props.price.toFixed(2)}
       </Button>
 
@@ -76,9 +77,9 @@ export default function Ramp(props) {
           <ModalBody>
             <p>
               <Button
+                variant={'outline'}
                 type={type}
-                size="large"
-                shape="round"
+                rounded={'full'}
                 onClick={() => {
                   window.open(
                     "https://pay.sendwyre.com/purchase?destCurrency=ETH&sourceAmount=25&dest=" + props.address,
@@ -96,6 +97,7 @@ export default function Ramp(props) {
             <p>
               {" "}
               <Button
+                variant={'outline'}
                 type={type}
                 size="large"
                 shape="round"
@@ -154,8 +156,9 @@ export default function Ramp(props) {
       </Modal>
 
       <Button
-        size="large"
-        shape="round"
+        variant={'outline'}
+        size="md"
+        rounded={'full'}
         onClick={() => {
           setModalUp("up");
         }}
@@ -182,7 +185,7 @@ export default function Ramp(props) {
         <p>
           <Button
             type={type}
-            size="large"
+            size="md"
             shape="round"
             onClick={() => {
               window.open("https://pay.sendwyre.com/purchase?destCurrency=ETH&sourceAmount=25&dest=" + props.address);

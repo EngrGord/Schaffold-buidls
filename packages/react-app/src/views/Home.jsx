@@ -1,6 +1,27 @@
-import { useContractReader } from "eth-hooks";
+import {
+  useBalance,
+  useContractLoader,
+  useContractReader,
+  useGasPrice,
+  useOnBlock,
+  useUserProviderAndSigner,
+} from "eth-hooks";
+import {
+  Center,
+  Flex,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  Box,
+  Heading,
+  RadioGroup,
+  Stack,
+  Radio,
+} from "@chakra-ui/react";
 import { ethers } from "ethers";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 /**
@@ -9,114 +30,90 @@ import { Link } from "react-router-dom";
  * @param {*} readContracts contracts from current chain already pre-loaded using ethers contract module. More here https://docs.ethers.io/v5/api/contract/contract/
  * @returns react component
  **/
-function Home({ yourLocalBalance, readContracts }) {
+function Home({ targetNetwork, price, gasPrice, yourLocalBalance, readContracts }) {
+  const gasPriceF = useGasPrice(targetNetwork, "fastest");
+  const gasPriceS = useGasPrice(targetNetwork, "safeLow");
+  const gasPriceA = useGasPrice(targetNetwork, "average");
+
+  console.log(gasPriceF);
+  console.log(gasPriceA);
+  console.log(gasPriceS);
+
+  let gasPriceNum = typeof gasPrice === "undefined" ? 0 : parseInt(gasPrice, 10) / 10 ** 9;
+
+  const [value, setValue] = useState("Fast");
+  const [gasL, setGasL] = useState(774113);
+
+  let weiValue = (gasPriceNum * 10 ** 9 * gasL) / 10 ** 18;
+
+  let gasFee = weiValue * price;
+
   // you can also use hooks locally in your component of choice
   // in this case, let's keep track of 'purpose' variable from our contract
   const purpose = useContractReader(readContracts, "YourContract", "purpose");
 
   return (
     <div>
-      <div style={{ margin: 32 }}>
-        <span style={{ marginRight: 8 }}>📝</span>
-        This Is Your App Home. You can start editing it in{" "}
-        <span
-          className="highlight"
-          style={{ marginLeft: 4, /* backgroundColor: "#f9f9f9", */ padding: 4, borderRadius: 4, fontWeight: "bolder" }}
+      <Center>
+        <Flex
+          w={"60%"}
+          wrap="wrap"
+          h="60%"
+          borderRadius={10}
+          bg={"black"}
+          p="10px"
+          style={{ boxShadow: "5px 18px 13px 3px rgba(0,0,0,0.1)" }}
         >
-          packages/react-app/src/views/Home.jsx
-        </span>
-      </div>
-      <div style={{ margin: 32 }}>
-        <span style={{ marginRight: 8 }}>✏️</span>
-        Edit your smart contract{" "}
-        <span
-          className="highlight"
-          style={{ marginLeft: 4, /* backgroundColor: "#f9f9f9", */ padding: 4, borderRadius: 4, fontWeight: "bolder" }}
-        >
-          YourContract.sol
-        </span>{" "}
-        in{" "}
-        <span
-          className="highlight"
-          style={{ marginLeft: 4, /* backgroundColor: "#f9f9f9", */ padding: 4, borderRadius: 4, fontWeight: "bolder" }}
-        >
-          packages/hardhat/contracts
-        </span>
-      </div>
-      {!purpose ? (
-        <div style={{ margin: 32 }}>
-          <span style={{ marginRight: 8 }}>👷‍♀️</span>
-          You haven't deployed your contract yet, run
-          <span
-            className="highlight"
-            style={{
-              marginLeft: 4,
-              /* backgroundColor: "#f9f9f9", */ padding: 4,
-              borderRadius: 4,
-              fontWeight: "bolder",
-            }}
-          >
-            yarn chain
-          </span>{" "}
-          and{" "}
-          <span
-            className="highlight"
-            style={{
-              marginLeft: 4,
-              /* backgroundColor: "#f9f9f9", */ padding: 4,
-              borderRadius: 4,
-              fontWeight: "bolder",
-            }}
-          >
-            yarn deploy
-          </span>{" "}
-          to deploy your first contract!
-        </div>
-      ) : (
-        <div style={{ margin: 32 }}>
-          <span style={{ marginRight: 8 }}>🤓</span>
-          The "purpose" variable from your contract is{" "}
-          <span
-            className="highlight"
-            style={{
-              marginLeft: 4,
-              /* backgroundColor: "#f9f9f9", */ padding: 4,
-              borderRadius: 4,
-              fontWeight: "bolder",
-            }}
-          >
-            {purpose}
-          </span>
-        </div>
-      )}
-
-      <div style={{ margin: 32 }}>
-        <span style={{ marginRight: 8 }}>🤖</span>
-        An example prop of your balance{" "}
-        <span style={{ fontWeight: "bold", color: "green" }}>({ethers.utils.formatEther(yourLocalBalance)})</span> was
-        passed into the
-        <span
-          className="highlight"
-          style={{ marginLeft: 4, /* backgroundColor: "#f9f9f9", */ padding: 4, borderRadius: 4, fontWeight: "bolder" }}
-        >
-          Home.jsx
-        </span>{" "}
-        component from
-        <span
-          className="highlight"
-          style={{ marginLeft: 4, /* backgroundColor: "#f9f9f9", */ padding: 4, borderRadius: 4, fontWeight: "bolder" }}
-        >
-          App.jsx
-        </span>
-      </div>
-      <div style={{ margin: 32 }}>
-        <span style={{ marginRight: 8 }}>💭</span>
-        Check out the <Link to="/hints">"Hints"</Link> tab for more tips.
-      </div>
-      <div style={{ margin: 32 }}>
-        <span style={{ marginRight: 8 }}>🛠</span>
-        Tinker with your smart contract using the <Link to="/debug">"Debug Contract"</Link> tab.
-      </div>
+          <Box mr={4} borderRadius={10}>
+            <Box mb={3} h={12} borderTopRadius="15px" bg="blue">
+              <Heading>Gas Limit</Heading>
+            </Box>
+            <NumberInput defaultValue={gasL} borderColor="gray">
+              <NumberInputField onChange={e => setGasL(e.target.value)} />
+            </NumberInput>
+          </Box>
+          <Box mr={4} borderRadius={10}>
+            <Box mb={3} h={12} borderTopRadius="15px" bg="green">
+              <Heading>1 ETH to $</Heading>
+            </Box>
+            <NumberInput value={"$" + " " + price} borderColor="gray">
+              <NumberInputField />
+            </NumberInput>
+          </Box>
+          <Box mr={4} borderRadius={10}>
+            <Box mb={3} h={12} borderTopRadius="15px" bg="blue">
+              <Heading>cost(wei)</Heading>
+            </Box>
+            <NumberInput value={weiValue} borderColor="gray">
+              <NumberInputField />
+            </NumberInput>
+          </Box>
+          <Box mr={3} borderRadius={10}>
+            <Box mb={3} h={12} borderTopRadius="15px" bg="blue">
+              <Heading>Gas Price</Heading>
+            </Box>
+            <NumberInput value={gasPriceNum} borderColor="gray">
+              <NumberInputField />
+            </NumberInput>
+          </Box>
+          <Box borderRadius={10}>
+            <Box mb={3} h={12} borderTopRadius="15px" bg="green">
+              <Heading>Gas Fee $</Heading>
+            </Box>
+            <NumberInput value={"$" + " " + gasFee} borderColor="gray">
+              <NumberInputField />
+            </NumberInput>
+          </Box>
+          <RadioGroup onChange={setValue} value={value}>
+            <Stack direction="row">
+              <Radio value="SafeLow">Safe Low</Radio>
+              <Radio value="Average">Average</Radio>
+              <Radio value="Fast">Fast</Radio>
+              <Radio value="Fastest">Fastest</Radio>
+            </Stack>
+          </RadioGroup>
+        </Flex>
+      </Center>
     </div>
   );
 }
