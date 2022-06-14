@@ -1,34 +1,21 @@
-import {
-  useBalance,
-  useContractLoader,
-  useContractReader,
-  useGasPrice,
-  useOnBlock,
-  useUserProviderAndSigner,
-} from "eth-hooks";
+import { useContractReader, useGasPrice } from "eth-hooks";
 import {
   Center,
   Flex,
   NumberInput,
   NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   Box,
   Heading,
   RadioGroup,
   Stack,
   Radio,
-  FormHelperText,
   Stat,
   StatLabel,
   StatNumber,
   StatHelpText,
   Tooltip,
 } from "@chakra-ui/react";
-import { ethers } from "ethers";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 
 /**
  * web3 props can be passed from '../App.jsx' into your local view component for use
@@ -57,6 +44,8 @@ function Home({ targetNetwork, price, gasPrice, yourLocalBalance, readContracts 
     gasPriceNum = parseInt(gasPrice, 10) / 10 ** 9;
   } else if (valueRadio == "Fastest" && gasPriceF !== "undefined") {
     gasPriceNum = parseInt(gasPriceF, 10) / 10 ** 9;
+  } else {
+    gasPriceNum = 0;
   }
   const [gasL, setGasL] = useState(774113);
   console.log(valueRadio);
@@ -77,10 +66,9 @@ function Home({ targetNetwork, price, gasPrice, yourLocalBalance, readContracts 
           borderRadius={10}
           bg={"black"}
           p="30px"
-          
           style={{ boxShadow: "5px 18px 13px 3px rgba(0,0,0,0.1)" }}
         >
-          <Heading transition={'all .5s ease-in-out'}>Ethereum Gas Fee Calculator</Heading>
+          <Heading transition={"all .5s ease-in-out"}>Ethereum Gas Fee Calculator</Heading>
           <RadioGroup onChange={setValueRadio} value={valueRadio}>
             <Stack direction="row">
               <Tooltip label="Top" placement="top">
