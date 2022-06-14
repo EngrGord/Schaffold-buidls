@@ -1,21 +1,7 @@
-import { useContractReader, useGasPrice } from "eth-hooks";
-import {
-  Center,
-  Flex,
-  NumberInput,
-  NumberInputField,
-  Box,
-  Heading,
-  RadioGroup,
-  Stack,
-  Radio,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
-  Tooltip,
-} from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Center, Flex, Image } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 /**
  * web3 props can be passed from '../App.jsx' into your local view component for use
@@ -24,38 +10,26 @@ import React, { useState } from "react";
  * @returns react component
  **/
 function Home({ targetNetwork, price, gasPrice, yourLocalBalance, readContracts }) {
-  const gasPriceF = useGasPrice(targetNetwork, "fastest");
-  const gasPriceS = useGasPrice(targetNetwork, "safeLow");
-  const gasPriceA = useGasPrice(targetNetwork, "average");
+  let { address, id, chainId } = useParams();
+  const [nft, setNft] = useState({});
+  const [activeLoader, setLoader] = useState(true);
 
-  console.log(gasPriceF);
-  console.log(gasPriceA);
-  console.log(gasPriceS);
+  useEffect(() => {
+    handleNft();
+  }, []);
 
-  const [valueRadio, setValueRadio] = useState("Fast");
-
-  let gasPriceNum = typeof gasPrice === "undefined" ? 0 : parseInt(gasPrice, 10) / 10 ** 9;
-
-  if (valueRadio == "SafeLow" && gasPriceS !== "undefined") {
-    gasPriceNum = parseInt(gasPriceS, 10) / 10 ** 9;
-  } else if (valueRadio == "Average" && !gasPriceA !== "undefined") {
-    gasPriceNum = parseInt(gasPriceA, 10) / 10 ** 9;
-  } else if (valueRadio == "Fast" && gasPrice !== "undefined") {
-    gasPriceNum = parseInt(gasPrice, 10) / 10 ** 9;
-  } else if (valueRadio == "Fastest" && gasPriceF !== "undefined") {
-    gasPriceNum = parseInt(gasPriceF, 10) / 10 ** 9;
-  } else {
-    gasPriceNum = 0;
-  }
-  const [gasL, setGasL] = useState(774113);
-  console.log(valueRadio);
-  let weiValue = (gasPriceNum * 10 ** 9 * gasL) / 10 ** 18;
-
-  let gasFee = weiValue * price;
-
-  // you can also use hooks locally in your component of choice
-  // in this case, let's keep track of 'purpose' variable from our contract
-  const purpose = useContractReader(readContracts, "YourContract", "purpose");
+  const handleNft = async () => {
+    const resp = await axios.get(
+      `https://api.covalenthq.com/v1/137/tokens/0x9498274b8c82b4a3127d67839f2127f2ae9753f4/nft_metadata/1/?quote-currency=USD&format=JSON`,
+      { auth: { username: "ckey_6bf60a7bf22d4a309dbe74f3c5c" } },
+    );
+    setNft(
+      resp.data.data.items[0].nft_data !== null
+        ? resp.data.data.items[0].nft_data[0]
+        : { external_data: { image: "" } },
+    );
+    setLoader(false);
+  };
 
   return (
     <div>
@@ -68,73 +42,26 @@ function Home({ targetNetwork, price, gasPrice, yourLocalBalance, readContracts 
           p="30px"
           style={{ boxShadow: "5px 18px 13px 3px rgba(0,0,0,0.1)" }}
         >
-          <Heading transition={"all .5s ease-in-out"}>Ethereum Gas Fee Calculator</Heading>
-          <RadioGroup onChange={setValueRadio} value={valueRadio}>
-            <Stack mt={10} direction="row">
-              <Tooltip label="Top" placement="top">
-                <Radio value="SafeLow">Safe Low</Radio>
-              </Tooltip>
-              <Radio value="Average">Average</Radio>
-              <Radio value="Fast">Fast</Radio>
-              <Radio value="Fastest">Fastest</Radio>
-            </Stack>
-          </RadioGroup>
-          <Stack my={50} direction={"row"}>
-            <Box mr={10} borderRadius={10}>
-              <Box p={"auto"} mb={3} h={12} borderTopRadius="15px" bg="blue.700">
-                <Heading lineHeight={""} fontSize={{ base: "2xl", md: "2xl" }}>
-                  Gas Amount
-                </Heading>
-              </Box>
-              <NumberInput defaultValue={gasL} borderColor="gray">
-                <NumberInputField autoFocus onChange={e => setGasL(e.target.value)} />
-              </NumberInput>
-            </Box>
-            <Box borderRadius={10}>
-              {/* <Stat>
-              <StatLabel>Gas Fee</StatLabel>
-              <StatNumber fontSize={50}>{"$" + " " + gasFee.toFixed(2)}</StatNumber>
-              <StatHelpText>Gas fee required for the Input gas.</StatHelpText>
-            </Stat> */}
-              <Box mb={3} h={12} borderTopRadius="15px" bg="blue.700">
-                <Heading lineHeight={""} fontSize={{ base: "2xl", md: "2xl" }}>
-                  Gas Fee
-                </Heading>
-              </Box>
-              <NumberInput value={"$" + " " + gasFee.toFixed(2)} borderColor="gray">
-                <NumberInputField />
-              </NumberInput>
-            </Box>
-          </Stack>
-          <Stack mb={5} direction={"row"}>
-            <Box mr={10} borderRadius={10}>
-              <Box mb={3} h={12} borderTopRadius="15px" bg="blue.700">
-                <Heading lineHeight={""} fontSize={{ base: "2xl", md: "2xl" }}>
-                  Gas Price(Gwei)
-                </Heading>
-              </Box>
-              <NumberInput value={gasPriceNum} borderColor="gray">
-                <NumberInputField />
-              </NumberInput>
-            </Box>
-            <Box mr={4} borderRadius={10}>
-              <Box mb={3} h={12} borderTopRadius="15px" bg="blue.700">
-                <Heading lineHeight={""} fontSize={{ base: "2xl", md: "2xl" }}>
-                  Gas Cost(ETH)
-                </Heading>
-              </Box>
-              <NumberInput value={"Ξ" + " " + weiValue} borderColor="gray">
-                <NumberInputField />
-              </NumberInput>
-            </Box>
-          </Stack>
-          <Box mr={4} borderRadius={10}>
-            <Stat>
-              <StatLabel>ETH Dollar Price</StatLabel>
-              <StatNumber color={"green"}>{"$" + " " + price}</StatNumber>
-              <StatHelpText>Realtime ETH price</StatHelpText>
-            </Stat>
-          </Box>
+          <div className="nft-details">
+            <h1>{nft?.external_data?.name}</h1>
+            <h2>Token ID : {nft.token_id}</h2>
+            <p>{nft?.external_data?.description}</p>
+            <Image src={nft?.external_data?.image} />
+            <table className="nft-table">
+              {nft?.external_data?.attributes ? (
+                <>
+                  {nft.external_data.attributes.map((o, i) => {
+                    return (
+                      <tr key={i}>
+                        <td> {o.trait_type} </td>
+                        <td> {o.value} </td>
+                      </tr>
+                    );
+                  })}
+                </>
+              ) : null}
+            </table>
+          </div>
         </Flex>
       </Center>
     </div>
