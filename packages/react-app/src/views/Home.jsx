@@ -70,7 +70,7 @@ function Home({ targetNetwork, price, gasPrice, yourLocalBalance, readContracts 
         >
           <Heading transition={"all .5s ease-in-out"}>Ethereum Gas Fee Calculator</Heading>
           <RadioGroup onChange={setValueRadio} value={valueRadio}>
-            <Stack direction="row">
+            <Stack mt={10} direction="row">
               <Tooltip label="Top" placement="top">
                 <Radio value="SafeLow">Safe Low</Radio>
               </Tooltip>
@@ -79,7 +79,7 @@ function Home({ targetNetwork, price, gasPrice, yourLocalBalance, readContracts 
               <Radio value="Fastest">Fastest</Radio>
             </Stack>
           </RadioGroup>
-          <Stack my={70} direction={"row"}>
+          <Stack my={50} direction={"row"}>
             <Box mr={10} borderRadius={10}>
               <Box p={"auto"} mb={3} h={12} borderTopRadius="15px" bg="blue.700">
                 <Heading lineHeight={""} fontSize={{ base: "2xl", md: "2xl" }}>
@@ -96,7 +96,7 @@ function Home({ targetNetwork, price, gasPrice, yourLocalBalance, readContracts 
               <StatNumber fontSize={50}>{"$" + " " + gasFee.toFixed(2)}</StatNumber>
               <StatHelpText>Gas fee required for the Input gas.</StatHelpText>
             </Stat> */}
-              <Box mb={3} h={12} borderTopRadius="15px" bg="green">
+              <Box mb={3} h={12} borderTopRadius="15px" bg="blue.700">
                 <Heading lineHeight={""} fontSize={{ base: "2xl", md: "2xl" }}>
                   Gas Fee
                 </Heading>
