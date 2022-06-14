@@ -63,7 +63,7 @@ const initialNetwork = NETWORKS.localhost; // <------- select your target fronte
 // 😬 Sorry for all the console logging
 const DEBUG = false;
 const NETWORKCHECK = false;
-const USE_BURNER_WALLET = false; // toggle burner wallet feature
+const USE_BURNER_WALLET = true; // toggle burner wallet feature
 const USE_NETWORK_SELECTOR = false;
 
 const web3Modal = Web3ModalSetup();
@@ -254,17 +254,17 @@ function App(props) {
       {/* ✏️ Edit the header and change the title to your project name */}
       <Header>
         {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
-        <div style={{ position: "relative", display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", flex: 1 }}>
-            {USE_NETWORK_SELECTOR && (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: 'center' }}>
+          <div style={{ display: "flex", alignItems: 'center', alignContent: 'center'}}>
+            {/* {USE_NETWORK_SELECTOR && (
               <div style={{ marginRight: 20 }}>
-                {/* <NetworkSwitch
+                <NetworkSwitch
                   networkOptions={networkOptions}
                   selectedNetwork={selectedNetwork}
                   setSelectedNetwork={setSelectedNetwork}
-                /> */}
-              </div>
-            )}
+                />
+              </div> 
+            )} */}
             <Account
               useBurner={USE_BURNER_WALLET}
               address={address}
@@ -394,7 +394,7 @@ function App(props) {
         </Route> */}
       </Switch>
 
-      <ThemeSwitch />
+      {/* <ThemeSwitch /> */}
 
       {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
       <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>

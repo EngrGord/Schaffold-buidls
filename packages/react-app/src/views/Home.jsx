@@ -77,9 +77,10 @@ function Home({ targetNetwork, price, gasPrice, yourLocalBalance, readContracts 
           borderRadius={10}
           bg={"black"}
           p="30px"
+          
           style={{ boxShadow: "5px 18px 13px 3px rgba(0,0,0,0.1)" }}
         >
-          <Heading>Ethereum Gas Fee Calculator</Heading>
+          <Heading transition={'all .5s ease-in-out'}>Ethereum Gas Fee Calculator</Heading>
           <RadioGroup onChange={setValueRadio} value={valueRadio}>
             <Stack direction="row">
               <Tooltip label="Top" placement="top">
