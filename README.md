@@ -2,9 +2,16 @@
 
 > everything you need to build on Ethereum! 🚀
 
-🧪 Quickly experiment with Solidity using a frontend that adapts to your smart contract:
+## Ethereum Gas Fee Calculator
 
-![image](https://user-images.githubusercontent.com/2653167/124158108-c14ca380-da56-11eb-967e-69cde37ca8eb.png)
+This build uses eth-hook to get Safe low, Average, Fast and Fastest gas prices from eth gas station, and allows the user to choose between these options which is applied in computing the gas costs.
+
+It calculates the Eth and Dollar cost of the Gas Limit provided by the user though it starts with a default value of 7741134 gas which can be changed, the gas fee is calculated instantly with no lag.
+
+## Demo
+
+ [Ethereum Gas Fee Calculator](https://gas-stop.surge.sh/)
+
 
 
 # 🏄‍♂️ Quick Start
