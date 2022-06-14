@@ -110,7 +110,7 @@ function Home({ targetNetwork, price, gasPrice, yourLocalBalance, readContracts 
             <Box mr={10} borderRadius={10}>
               <Box mb={3} h={12} borderTopRadius="15px" bg="blue.700">
                 <Heading lineHeight={""} fontSize={{ base: "2xl", md: "2xl" }}>
-                  Gas Price
+                  Gas Price(Gwei)
                 </Heading>
               </Box>
               <NumberInput value={gasPriceNum} borderColor="gray">
@@ -120,7 +120,7 @@ function Home({ targetNetwork, price, gasPrice, yourLocalBalance, readContracts 
             <Box mr={4} borderRadius={10}>
               <Box mb={3} h={12} borderTopRadius="15px" bg="blue.700">
                 <Heading lineHeight={""} fontSize={{ base: "2xl", md: "2xl" }}>
-                  Gas Fee(ETH)
+                  Gas Cost(ETH)
                 </Heading>
               </Box>
               <NumberInput value={"Ξ" + " " + weiValue} borderColor="gray">
