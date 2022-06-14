@@ -39,19 +39,35 @@ function Home({ targetNetwork, price, gasPrice, yourLocalBalance, readContracts 
   console.log(gasPriceA);
   console.log(gasPriceS);
 
-  let gasPriceNum = typeof gasPrice === "undefined" ? 0 : parseInt(gasPrice, 10) / 10 ** 9;
+  
+  const [valueRadio, setValueRadio] = useState("Fast");
 
-  const [value, setValue] = useState("Fast");
+
+  let gasPriceNum =typeof gasPrice === "undefined" ? 0 : parseInt(gasPrice, 10) / 10 ** 9;
+
+
+  if(valueRadio == "SafeLow" && gasPriceS !== "undefined") {
+     gasPriceNum = parseInt(gasPriceS, 10) / 10 ** 9;
+    } else if (valueRadio == "Average" && !gasPriceA !== "undefined") {
+      gasPriceNum = parseInt(gasPriceA, 10) / 10 ** 9;
+
+    } else if (valueRadio == "Fast" && gasPrice !== "undefined") {
+      gasPriceNum = parseInt(gasPrice, 10) / 10 ** 9;
+
+    } else if (valueRadio == "Fastest" && gasPriceF !== "undefined") {
+      gasPriceNum = parseInt(gasPriceF, 10) / 10 ** 9;
+
+    }
   const [gasL, setGasL] = useState(774113);
-
+  console.log(valueRadio)
   let weiValue = (gasPriceNum * 10 ** 9 * gasL) / 10 ** 18;
-
+  
   let gasFee = weiValue * price;
-
+  
   // you can also use hooks locally in your component of choice
   // in this case, let's keep track of 'purpose' variable from our contract
   const purpose = useContractReader(readContracts, "YourContract", "purpose");
-
+  
   return (
     <div>
       <Center>
@@ -104,7 +120,7 @@ function Home({ targetNetwork, price, gasPrice, yourLocalBalance, readContracts 
               <NumberInputField />
             </NumberInput>
           </Box>
-          <RadioGroup onChange={setValue} value={value}>
+          <RadioGroup onChange={setValueRadio} value={valueRadio}>
             <Stack direction="row">
               <Radio value="SafeLow">Safe Low</Radio>
               <Radio value="Average">Average</Radio>
