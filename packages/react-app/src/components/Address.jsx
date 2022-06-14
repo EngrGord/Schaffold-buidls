@@ -1,4 +1,4 @@
-import { Button, Box, Flex, Text, Spinner, useClipboard, toast, useToast } from "@chakra-ui/react";
+import { Button, Box, Flex, Text, Spinner, useClipboard } from "@chakra-ui/react";
 import React from "react";
 import Blockies from "react-blockies";
 import { useLookupAddress } from "eth-hooks/dapps/ens";
@@ -33,9 +33,8 @@ export default function Address(props) {
   const validEnsCheck = ensSplit && ensSplit[ensSplit.length - 1] === "eth";
   const etherscanLink = blockExplorerLink(address, props.blockExplorer);
   let displayAddress = address?.substr(0, 5) + "..." + address?.substr(-4);
-  const { hasCopied, onCopy } = useClipboard(address);
-  const toast = useToast();
-
+  const {  onCopy } = useClipboard(address);
+ 
   if (validEnsCheck) {
     displayAddress = ens;
   } else if (props.size === "short") {
@@ -62,7 +61,7 @@ export default function Address(props) {
 
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <Flex direction={'row'} align={'center'}>
         <span style={{ overflow: "hidden", borderRadius: "50%" }}>
           <Blockies
             seed={address.toLowerCase()}
@@ -73,7 +72,7 @@ export default function Address(props) {
         <span style={{ paddingLeft: 5, fontSize: props.fontSize ? props.fontSize : 28 }}>
           {props.onChange ? (
             <Flex align={"center"}>
-              <Text editable={{ onChange: props.onChange }} copyable={{ text: address }}>
+              <Text >
                 <a style={{ color: "#ffff" }} target="_blank" href={etherscanLink} rel="noopener noreferrer">
                   {displayAddress}
                 </a>
@@ -81,17 +80,17 @@ export default function Address(props) {
               <CopyIcon size={59} color="white" onClick={onCopy} />
             </Flex>
           ) : (
-            <Flex align={"center"}>
+            <Flex mt={4} align={"center"} w='fit-content' justify={'center'}>
               <Text>
                 <a style={{ color: "#fff" }} target="_blank" href={etherscanLink} rel="noopener noreferrer">
                   {displayAddress}
                 </a>
               </Text>
-              <CopyIcon mx={2} size={59} color="white" _hover={{ color: "purple" }} onClick={onCopy} />
+              <CopyIcon mt={-3} mx={2} size={59} color="white" _hover={{ color: "purple" }} onClick={onCopy} />
             </Flex>
           )}
         </span>
-      </div>
+      </Flex>
     </>
   );
 }

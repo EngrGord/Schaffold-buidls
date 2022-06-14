@@ -1,4 +1,4 @@
-import { Button, Grid, GridItem, HStack, Menu, VStack } from "@chakra-ui/react";
+import { Button, Grid, GridItem, HStack, Menu, Stack, VStack } from "@chakra-ui/react";
 import {
   useBalance,
   useContractLoader,
@@ -34,6 +34,7 @@ import {
   //Hints,
   //Subgraph
 } from "./views";
+import { web } from "./image";
 import { useStaticJsonRPC } from "./hooks";
 
 const { ethers } = require("ethers");
@@ -62,7 +63,7 @@ const initialNetwork = NETWORKS.localhost; // <------- select your target fronte
 // 😬 Sorry for all the console logging
 const DEBUG = false;
 const NETWORKCHECK = false;
-const USE_BURNER_WALLET = false; // toggle burner wallet feature
+const USE_BURNER_WALLET = true; // toggle burner wallet feature
 const USE_NETWORK_SELECTOR = false;
 
 const web3Modal = Web3ModalSetup();
@@ -249,21 +250,21 @@ function App(props) {
   const faucetAvailable = localProvider && localProvider.connection && targetNetwork.name.indexOf("local") !== -1;
 
   return (
-    <div className="App">
+    <div style={{ backgroundImage: `url(${web})` }} className="App">
       {/* ✏️ Edit the header and change the title to your project name */}
       <Header>
         {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
-        <div style={{ position: "relative", display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", flex: 1 }}>
-            {USE_NETWORK_SELECTOR && (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: 'center' }}>
+          <div style={{ display: "flex", alignItems: 'center', alignContent: 'center'}}>
+            {/* {USE_NETWORK_SELECTOR && (
               <div style={{ marginRight: 20 }}>
-                {/* <NetworkSwitch
+                <NetworkSwitch
                   networkOptions={networkOptions}
                   selectedNetwork={selectedNetwork}
                   setSelectedNetwork={setSelectedNetwork}
-                /> */}
-              </div>
-            )}
+                />
+              </div> 
+            )} */}
             <Account
               useBurner={USE_BURNER_WALLET}
               address={address}
@@ -314,7 +315,13 @@ function App(props) {
       <Switch>
         <Route exact path="/">
           {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
-          <Home yourLocalBalance={yourLocalBalance} readContracts={readContracts} />
+          <Home
+            targetNetwork={targetNetwork}
+            price={price}
+            gasPrice={gasPrice}
+            yourLocalBalance={yourLocalBalance}
+            readContracts={readContracts}
+          />
         </Route>
         {/*
         <Route exact path="/debug">
@@ -387,25 +394,27 @@ function App(props) {
         </Route> */}
       </Switch>
 
-      <ThemeSwitch />
+      {/* <ThemeSwitch /> */}
 
       {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
       <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>
-        <Grid align="middle" gap={4}>
-          <GridItem span={8}>
+        <Stack align="center" direction={"row"} gap={4}>
+          {/* <GridItem span={8}>
             <Ramp price={price} address={address} networks={NETWORKS} />
-          </GridItem>
+          </GridItem> */}
 
           <GridItem span={8} style={{ textAlign: "center", opacity: 0.8 }}>
             <GasGauge gasPrice={gasPrice} />
           </GridItem>
           <GridItem span={8} style={{ textAlign: "center", opacity: 1 }}>
             <Button
+              variant="outline"
+              colorScheme={"white"}
               onClick={() => {
                 window.open("https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA");
               }}
-              size="large"
-              shape="round"
+              size="md"
+              rounded={"full"}
             >
               <span style={{ marginRight: 8 }} role="img" aria-label="support">
                 💬
@@ -413,8 +422,8 @@ function App(props) {
               Support
             </Button>
           </GridItem>
-        </Grid>
-{/* 
+        </Stack>
+        {/* 
         <HStack align="middle" gutter={[4, 4]}>
           <VStack span={24}>
             {

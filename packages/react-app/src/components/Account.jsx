@@ -1,4 +1,4 @@
-import { Button, Flex } from "@chakra-ui/react";
+import { Button, Flex, Stack } from "@chakra-ui/react";
 import React from "react";
 
 import Address from "./Address";
@@ -58,27 +58,23 @@ export default function Account({
 
   return (
     <>
-      <div
-        style={{
-          border: "1px solid transparent",
-          borderRadius: "9999px",
-          backgroundColor: "#262626",
-          padding: "0.375rem 0.875rem",
-        }}
-      >
-        <Flex align={"center"} border={1} color={"white"} spacing={3}>
-          <Balance address={address} provider={localProvider} price={price} size={"1.125rem"} />
-
-          {address && (
-            <Address
-              address={address}
-              ensProvider={mainnetProvider}
-              blockExplorer={blockExplorer}
-              blockieSize={8}
-              fontSize={16}
-            />
-          )}
-        </Flex>
+      <div>
+        <Stack direction={"row"}>
+          <Flex align={"center"} border={1} color={"white"} spacing={3}>
+            <Balance address={address} provider={localProvider} price={price} size={"1.125rem"} />
+          </Flex>
+          <Flex align={"center"}>
+            {address && (
+              <Address
+                address={address}
+                ensProvider={mainnetProvider}
+                blockExplorer={blockExplorer}
+                blockieSize={8}
+                fontSize={16}
+              />
+            )}
+          </Flex>
+        </Stack>
       </div>
       <Button m={3} color="white" colorScheme="white.500" size={"md"} variant="outline" onClick={accountButton.action}>
         {accountButton.name}
